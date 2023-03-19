@@ -7,6 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -23,8 +24,9 @@ func (o *OpenAI) getClient() *openai.Client {
 			if _, err := os.Stat(filepath.Join(homeDir, ".c3pocfg")); err == nil {
 				// read from file
 				apiKeyBytes, _ := os.ReadFile(filepath.Join(homeDir, ".c3pocfg"))
-				apiKey = string(apiKeyBytes)
+				apiKey = strings.TrimSpace(string(apiKeyBytes))
 			}
+			logrus.Debugf("API Key: %s", apiKey)
 		}
 		o.client = openai.NewClient(apiKey)
 	})
